@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Home Page</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+  <script type="text/javascript">
+
+	function clearMessage(){
+		document.getElementById("errorMessage").innerHTML="";
+	}	
+	function searchMovie(){
+		//alert("@)@@(@(@()))");
+		var titlev=document.searchMovieForm.title.value;
+		if(titlev.length==0){
+			var spanObj=document.getElementById("errorMessage");
+			spanObj.innerHTML="Sorry! title cannot be blank.............";
+			document.searchMovieForm.title.focus();
+			return;
+		}else{
+			//load data using AJAX
+			fetch('searchMovie?title='+titlev).then(function(response) { 
+				// Convert to JSON
+				return response.json();
+			}).then(function(movie) {
+				// Yay, `j` is a JavaScript object
+				console.log(movie); 
+				document.getElementById("dtitle").innerHTML=movie.title;
+				document.getElementById("ddirector").innerHTML=movie.director;
+				document.getElementById("dlanguage").innerHTML=movie.language;
+				document.getElementById("dstory").innerHTML=movie.story;
+				document.getElementById("dyear").innerHTML=movie.year;
+				document.getElementById("timage").src=movie.poster;
+				
+			});
+		}
+	}
+
+  </script>
+</head>
+<body >
+<header style="background-color: #062f6d;height:30px;">
+</header>
+<div class="container">
+  <h2>Movie Page!</h2>
+  <a href="showMovies"><img src="img/movie.jpg" class="img-thumbnail" style="height: 100px;">Show Movies</a>
+  	<br/> 	<br/> 	
+  	<span id="errorMessage" style="color:red;font-size: 18px;">xxxxxxxxxx</span>	
+  	<br/> <br/> 
+  	<form name="searchMovieForm">
+			Title :
+			<input type="text" name="title" class="form-control" onkeydown="clearMessage();" style="width: 50%;display: inline;margin-right: 30px;"> 	
+			<button type="button" class="btn btn-primary" onclick="searchMovie();">Search Movie</button>
+			<button type="Reset" class="btn btn-danger">Clear</button>
+	</form>
+	<hr/>
+	  <p style="font-weight: bold;color: red;">Movie Search Result(s)</p>            
+  
+  
+    <table class="table table-bordered">
+    	<tr>
+    		<td>
+    		
+    		  <table class="table table-bordered">
+    <tbody>
+     <tr>
+        <td>Title</td>
+        <td id="dtitle">
+        </td>
+      </tr>
+      <tr>
+        <td>Director</td>
+     <td id="ddirector"></td>
+      </tr>
+      <tr>
+        <td>Year</td>
+          <td id="dyear"></td>
+      </tr>
+      <tr>
+        <td>Language</td>
+           <td id="dlanguage"></td>
+      </tr>
+      <tr>
+        <td>Review</td>
+           <td id="dstory"></td>
+      </tr>
+    </tbody>
+  </table>
+    		</td>
+    		
+    	<td style="width: 30%;">
+    	
+    	  <table class="table table-borderless">
+    <tbody>
+     <tr>
+        <td>
+        <img id="timage" src="" style="height: 200px;" class="img-thumbnail" >
+        </td>
+      </tr>
+    </tbody>
+  </table>
+    		</td>
+    		
+    	</tr>
+    
+    </table>
+	
+	
+</div>
+
+</body>
+</html>
