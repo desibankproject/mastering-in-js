@@ -30,6 +30,37 @@ public class MovieData {
 		 }
 	}
 	
+	
+	public static void updateMovie(Movie movie){
+		//Write Java code to insert data into the database
+		//Step-1 >>>Write SQL query
+		 String query="update tmovie_tbl set title=?,director=?,year=?,story=?,language=? where mid=?";
+		 try {
+			   //Step-1 -- loading the driver
+			   Class.forName("com.mysql.jdbc.Driver");
+			   	//Making connection
+			   //connection url = jdbc:mysql://localhost:3306/movies_db 
+			   //dbusername = root
+			   //dbpassword = mysql@1234
+			   Connection conn=DriverManager.getConnection("jdbc:mysql://localhost:3306/movies_db","root","mysql@1234");
+			   //pstmt holds compiled query
+			   PreparedStatement pstmt=conn.prepareStatement(query);
+			   //setting data inside the query
+			   pstmt.setString(1, movie.getTitle());
+			   pstmt.setString(2, movie.getDirector());
+			   pstmt.setInt(3,Integer.parseInt(movie.getYear()));
+			   pstmt.setString(4, movie.getStory());
+			   pstmt.setString(5, movie.getLanguage());
+			   pstmt.setInt(6, movie.getMid());
+			   //Fire the query
+			   pstmt.executeUpdate();
+			 
+		 }catch(Exception supriya){
+			 supriya.printStackTrace();
+		 }
+	}
+
+	
 	public static void addMovie(Movie movie){
 		//Write Java code to insert data into the database
 		//Step-1 >>>Write SQL query
