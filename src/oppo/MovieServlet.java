@@ -2,6 +2,7 @@ package oppo;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.sql.Blob;
 import java.util.ArrayList;
 
 import javax.servlet.ServletException;
@@ -12,7 +13,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 
-import sun.misc.IOUtils;
+import org.apache.tomcat.util.http.fileupload.IOUtils;
+
+
 
 
 //CRT + SHIFT+O
@@ -30,7 +33,10 @@ public class MovieServlet extends HttpServlet {
 			String director=request.getParameter("director");
 			String language=request.getParameter("language");
 			String story=request.getParameter("story");
-			String poster=request.getParameter("poster");
+			Part filePart = request.getPart("poster");
+			InputStream is=filePart.getInputStream();
+			byte[] poster=null;
+			IOUtils.readFully(is, poster);
 			Movie smovie=new Movie(title,year+"",director,language,story,poster);
 			MovieData.addMovie(smovie);
 			//here we are adding movie object inside request object using name =pdata

@@ -1,5 +1,7 @@
 package oppo;
 
+import java.sql.Blob;
+
 public class Movie {
 	
 	private int mid;
@@ -8,17 +10,21 @@ public class Movie {
 	private String director;
 	private String language;
 	private String story;
-	private String poster;
+	private byte[] poster;
 
 
 	//This is used to store image in Java Object
 	private byte[] photo;
 	
-	public Movie() {
-		
+	public Movie(String title, String year, String director, String language, String story) {
+		this.title = title;
+		this.year = year;
+		this.director = director;
+		this.language = language;
+		this.story = story;
 	}
 
-	public Movie(String title, String year, String director, String language, String story,String poster) {
+	public Movie(String title, String year, String director, String language, String story,byte[] poster) {
 		this.title = title;
 		this.year = year;
 		this.director = director;
@@ -45,11 +51,11 @@ public class Movie {
 		this.photo = photo;
 	}
 
-	public String getPoster() {
+	public byte[] getPoster() {
 		return poster;
 	}
 
-	public void setPoster(String poster) {
+	public void setPoster(byte[] poster) {
 		this.poster = poster;
 	}
 

@@ -1,6 +1,8 @@
 package oppo;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -11,6 +13,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.tomcat.util.http.fileupload.IOUtils;
 
 import com.google.gson.Gson;
 
@@ -28,9 +32,10 @@ public class SearchMovieServlet extends HttpServlet {
 		Movie tmovie=null;
 		try {
 					String query="select title,director,year,story,poster,language,mid  from tmovie_tbl where title=?";
-				   Class.forName("com.mysql.jdbc.Driver");
-				   Connection conn=DriverManager.getConnection("jdbc:mysql://localhost:3306/movies_db","root","mysql@1234");
-				   //No need to set any input
+
+					Class.forName(DBSettings.DRIVER);
+					Connection conn = DriverManager.getConnection(DBSettings.URL,DBSettings.USER_NAME,DBSettings.PASSWORD);
+					//No need to set any input
 				   PreparedStatement pstmt=conn.prepareStatement(query);
 				   pstmt.setString(1, stitle);
 				   //we should use executeQuery to fetch data
@@ -40,10 +45,12 @@ public class SearchMovieServlet extends HttpServlet {
 					  String director=rs.getString(2);
 					  int year=rs.getInt(3);
 					  String story=rs.getString(4);
-					  String poster=rs.getString(5);
+					  byte[] poster=null;
+					  //InputStream is=rs.getBinaryStream(5);
+					  //IOUtils.readFully(is, poster);
 					  String language=rs.getString(6);
 					  int mid=rs.getInt(7);
-					  tmovie=new Movie(title,year+"",director,language,story,poster);
+					  tmovie=new Movie(title,year+"",director,language,story);
 					  tmovie.setMid(mid);
 					 // movies.add(tmovie);
 				  }

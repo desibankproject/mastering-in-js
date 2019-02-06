@@ -31,8 +31,8 @@ public class EditMovieServlet extends HttpServlet {
 			String director=request.getParameter("director");
 			String language=request.getParameter("language");
 			String story=request.getParameter("review");
-			String poster=request.getParameter("poster");
-			Movie smovie=new Movie(title,year+"",director,language,story,poster);
+			//String poster=request.getParameter("poster");
+			Movie smovie=new Movie(title,year+"",director,language,story);
 			smovie.setMid(Integer.parseInt(mid));
 			MovieData.updateMovie(smovie);
 			//here we are adding movie object inside request object using name =pdata

@@ -7,149 +7,13 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
-  <script type="text/javascript">
-
-  	function updateMovie(){
-  		var formdata=new FormData(document.getElementById('movieEditForm'));
-		//send formdata using AJAX to the server
-		fetch('editMovieServlet', {
-			method: 'post',
-			body: formdata
-		}).then(function(response) {
-		    return response.text();
-		  }).then(function(text) { 
-		  	console.log(text); 
-		  	var spanObj=document.getElementById("errorMessage");
-			spanObj.innerHTML=text;
-			//update table at gui
-			$("#dtitle").html($("#etitle").val());
-			$("#ddirector").html($("#edirector").val());
-			$("#dyear").html($("#eyear").val());
-			$("#dlanguage").html($("#elanguage").val());
-			$("#dstory").html($("#ereview").val());
-			$("#movieEditFormModel").modal("hide");
-			//This is used to clear form data using JavaScript
-			//document.movieEditFormModel.reset();
-			//closing the poup
-			
-			//clearing the form data using javascript
-		  });
-
-  	}
-
-  	function openEditPopup(){
-		//document.getElementById("movieEditFormModel").modal("show");
-		var title=$("#dtitle").html();
-		if(title.trim().length==0){
-			document.getElementById("errorMessage").innerHTML="Sorry!, no search result exists!!!!!!";
-			document.searchMovieForm.title.focus();
-			return;
-		}
-		var tmid=$("#tmid").val();
-		$("#mid").val(tmid);
-		$("#etitle").val(title);
-
-		var director=$("#ddirector").html();
-		$("#edirector").val(director);
-
-		var year=$("#dyear").html();
-		$("#eyear").val(year);
-
-		var language=$("#dlanguage").html();
-		$("#elanguage").val(language);
-
-		var story=$("#dstory").html();
-		$("#ereview").val(story);
-		
-		$("#movieEditFormModel").modal("show");
-  	}
-
-	function clearMessage(){
-		document.getElementById("errorMessage").innerHTML="";
-	}	
-	function searchMovie(){
-		//alert("@)@@(@(@()))");
-		var titlev=document.searchMovieForm.title.value;
-		if(titlev.length==0){
-			var spanObj=document.getElementById("errorMessage");
-			spanObj.innerHTML="Sorry! title cannot be blank.............";
-			document.searchMovieForm.title.focus();
-			return;
-		}else{
-			//load data using AJAX
-			fetch('searchMovie?title='+titlev).then(function(response) { 
-				// Convert to JSON
-				return response.json();
-			}).then(function(movie) {
-				// Yay, `j` is a JavaScript object
-				console.log(movie); 
-				document.getElementById("dtitle").innerHTML=movie.title;
-				document.getElementById("ddirector").innerHTML=movie.director;
-				document.getElementById("dlanguage").innerHTML=movie.language;
-				document.getElementById("dstory").innerHTML=movie.story;
-				document.getElementById("dyear").innerHTML=movie.year;
-				
-				
-				//Below code is used to fecth image from server db
-				//This is AJAX call which we are making for servlet
-				fetch("posterServlet?mid="+movie.mid,{
-					method: 'get',
-				})
-				.then(function(response) {
-				  return response.blob();
-				})
-				.then(function(imageBlob) {
-					console.log(imageBlob);
-					//update poster img on search result
-					var objectURL = URL.createObjectURL(imageBlob);
-					$("#timage").attr("src",objectURL);
-				});
-				
-				$("#tmid").val(movie.mid);
-				$("#mid").val(movie.mid);
-			});
-			
-
-			
-			
-		}
-	}
-
-	function openUpdatePoster(){
-		if($("#dtitle").text().trim().length==0){
-			$("#errorMessage").html("Please find the movie before updating poster!")
-			return;
-		}
-		$("#imgtEditFormModel").modal("show");
-	}
-		
-	function updatePoster(){
-		document.getElementById('imgtEditForm').mid.value=$("#mid").val();
-		var formdata=new FormData(document.getElementById('imgtEditForm'));
-		//upload form with image and movieID
-		//default use multipart, so @multipart on servlet
-			fetch("posterServlet",{
-				method: 'post',
-				body: formdata
-			})
-			.then(function(response) {
-			  return response.blob();
-			})
-			.then(function(imageBlob) {
-				console.log(imageBlob);
-				//update poster img on search result
-				var objectURL = URL.createObjectURL(imageBlob);
-				$("#timage").attr("src",objectURL);
-			});
-		
-		
-			$("#imgtEditFormModel").modal("hide");
-	}
-		
-	
-	
-	
+  <script type="text/javascript" src="js/edit-movie.js">
   </script>
+  <script type="text/javascript" src="js/edit-poster.js">
+  </script>
+  <script type="text/javascript" src="js/search-movies.js">
+  </script>
+  
 </head>
 <body >
 <header style="background-color: #062f6d;height:30px;">
@@ -171,11 +35,12 @@
 	<hr/>
 	  <p style="font-weight: bold;color: red;">Movie Search Result(s)</p>            
   
+   
+   <div id="searchResults">
   
     <table class="table table-bordered">
     	<tr>
     		<td>
-    		
     		  <table class="table table-bordered">
     <tbody>
      <tr>
@@ -202,26 +67,26 @@
     </tbody>
   </table>
     		</td>
-    		
     	<td style="width: 30%;">
-    	
     	  <table class="table table-borderless">
     <tbody>
      <tr>
         <td>
         <img id="timage" src="" style="height: 200px;" class="img-thumbnail" >
-        <a href="javascript:openUpdatePoster();"> <img id="cimage" src="img/change-image.png"  class="img-thumbnail" ></a>
-       <a href="javascript:openEditPopup();"> <img id="etimage" src="img/edit.png" style="height: 60px;" class="img-thumbnail" ></a>
-        
         </td>
       </tr>
     </tbody>
   </table>
     		</td>
-    		
     	</tr>
-    
     </table>
+    
+    
+   
+	</div>
+	
+	
+	
 	
 	
 </div>
@@ -229,9 +94,7 @@
 
 <!-- Modal -->
 <form  id="movieEditForm"  >
-
  <input type="hidden" class="form-control" id="mid" name="mid"/>
-
 <div id="movieEditFormModel" class="modal fade" role="dialog">
   <div class="modal-dialog" style="width: 800px;"> 
     <!-- Modal content-->
@@ -285,9 +148,7 @@
 
 <!-- img Modal -->
 <form  id="imgtEditForm"  >
-
- <input type="hidden" class="form-control" name="mid"/>
-
+ <input type="hidden" id="imagemid" class="form-control" name="mid"/>
 <div id="imgtEditFormModel" class="modal fade" role="dialog">
   <div class="modal-dialog" style="width: 800px;"> 
     <!-- Modal content-->
